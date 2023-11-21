@@ -1,5 +1,6 @@
 import { useState } from "react";
 import TodoItem from "./TodoItem";
+import TodoForm from "./TodoForm";
 
 function TodoWrapper () {
     const [todos, setTodos] = useState([{
@@ -39,12 +40,20 @@ function TodoWrapper () {
             <h1>
                 Todo жагсаалт
             </h1>
-            {todos.map((todo) => <TodoItem 
+            <TodoForm saveTodo={addTodo} />
+
+            {todos.map((todo) => (
+            todo.isEditing ? 
+            <TodoForm todo={todo} saveTodo={editTodo}/> 
+            :
+            
+            <TodoItem 
             key={todo.id}
             deleteTodo={deleteTodo} 
             toggleEditing={toggleEditing}
             toggleComplete={toggleComplete}
-            todo={todo} /> )}
+            todo={todo} /> )
+            )}
         </div>
     )
 }
