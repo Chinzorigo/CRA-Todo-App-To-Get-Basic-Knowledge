@@ -1,4 +1,5 @@
 function TodoItem(props) {
+    
     const { todo, deleteTodo, toggleEditing, toggleComplete } = props;
 
     return (

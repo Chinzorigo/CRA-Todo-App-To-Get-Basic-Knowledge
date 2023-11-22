@@ -5,7 +5,7 @@ function TodoForm(props) {
     const [value, setValue] = useState(todo?.text || '' )
 
     const onSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault(); //prevent refresh
 
         if (value) {
 

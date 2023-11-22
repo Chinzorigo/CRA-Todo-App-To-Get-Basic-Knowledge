@@ -20,11 +20,11 @@ function TodoWrapper () {
     }
 
     const editTodo = (text, id) => {
-        setTodos(todos.map((todo) => (todo.id === id ? {...todo, text } : todo)))
+        setTodos(todos.map((todo) => (todo.id === id ? {...todo, text, isEditing: !todo.isEditing } : todo)))
     }
 
     const deleteTodo = (id) => {
-        setTodos(todos.filter((todo) => todo.id !=id))
+        setTodos(todos.filter((todo) => todo.id !== id))
     }
 
     const toggleComplete = (id) => {
@@ -43,10 +43,11 @@ function TodoWrapper () {
             <TodoForm saveTodo={addTodo} />
 
             {todos.map((todo) => (
+
             todo.isEditing ? 
+
             <TodoForm todo={todo} saveTodo={editTodo}/> 
-            :
-            
+            :            
             <TodoItem 
             key={todo.id}
             deleteTodo={deleteTodo} 
