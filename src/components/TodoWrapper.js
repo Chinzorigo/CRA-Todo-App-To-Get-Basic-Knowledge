@@ -1,62 +1,123 @@
-import { useState } from "react";
+import { useReducer } from "react";
 import TodoItem from "./TodoItem";
 import TodoForm from "./TodoForm";
 
-function TodoWrapper () {
-    const [todos, setTodos] = useState([{
-        id: Math.random().toString(),
-        text: 'wash dishes',
-        isCompleted: false,
-        isEditing: false,
-    }]);
-
-    const addTodo = (text) => {
-        setTodos([...todos, {
-            id: Math.random().toString(),
-            text,
-            isCompleted: false,
-            isEditing: false,
-        } ])
+function reducer(todos, action) {
+  switch (action.type) {
+    case "ADD_TODO": {
+      return [
+        ...todos,
+        {
+          id: Math.random().toString(),
+          text: action.payload.text,
+          isCompleted: false,
+          isEditing: false,
+        },
+      ];
     }
-
-    const editTodo = (text, id) => {
-        setTodos(todos.map((todo) => (todo.id === id ? {...todo, text, isEditing: !todo.isEditing } : todo)))
+    case "EDIT_TODO": {
+      return todos.map((todo) =>
+        todo.id === action.payload.id
+          ? { ...todo, text: action.payload.text, isEditing: !todo.isEditing }
+          : todo
+      );
     }
-
-    const deleteTodo = (id) => {
-        setTodos(todos.filter((todo) => todo.id !== id))
+    case "DELETE_TODO": {
+      return todos.filter((todo) => todo.id !== action.payload.id);
     }
-
-    const toggleComplete = (id) => {
-        setTodos(todos.map((todo) => (todo.id === id ? {...todo, isCompleted: !todo.isCompleted } : todo)))
+    case "TOGGLE_COMPLETE": {
+      return todos.map((todo) =>
+        todo.id === action.payload.id
+          ? { ...todo, isCompleted: !todo.isCompleted }
+          : todo
+      );
     }
-
-    const toggleEditing = (id) => {
-        setTodos(todos.map((todo) => (todo.id === id ? {...todo, isEditing: !todo.isEditing } : todo)))
+    case "TOGGLE_EDIT": {
+      return todos.map((todo) =>
+        todo.id === action.payload.id
+          ? { ...todo, isEditing: !todo.isEditing }
+          : todo
+      );
     }
+  }
+}
 
-    return (
-        <div className="TodoWrapper">
-            <h1>
-                Todo жагсаалт
-            </h1>
-            <TodoForm saveTodo={addTodo} />
+function TodoWrapper() {
+  const [todos, dispatch] = useReducer(reducer, [
+    {
+      id: Math.random().toString(),
+      text: "wash dishes",
+      isCompleted: false,
+      isEditing: false,
+    },
+  ]);
 
-            {todos.map((todo) => (
+  const addTodo = (text) => {
+    dispatch({
+      type: "ADD_TODO",
+      payload: {
+        text,
+      },
+    });
+  };
 
-            todo.isEditing ? 
+  const editTodo = (text, id) => {
+    dispatch({
+      type: "EDIT_TODO",
+      payload: {
+        text,
+        id,
+      },
+    });
+  };
 
-            <TodoForm todo={todo} saveTodo={editTodo}/> 
-            :            
-            <TodoItem 
+  const deleteTodo = (id) => {
+    dispatch({
+      type: "DELETE_TODO",
+      payload: {
+        id,
+      },
+    });
+  };
+
+  const toggleComplete = (id) => {
+    dispatch({
+      type: "TOGGLE_COMPLETE",
+      payload: {
+        id,
+      },
+    });
+  };
+
+  const toggleEditing = (id) => {
+    dispatch({
+      type: "TOGGLE_EDIT",
+      payload: {
+        id,
+      },
+    });
+  };
+
+  return (
+    <div className="TodoWrapper">
+      <h1>Todo жагсаалт</h1>
+      <TodoForm saveTodo={addTodo} />
+
+      {todos.map((todo) =>
+        todo.isEditing ? (
+          <TodoForm todo={todo} saveTodo={editTodo} />
+        ) : (
+          <TodoItem
             key={todo.id}
-            deleteTodo={deleteTodo} 
+            deleteTodo={deleteTodo}
             toggleEditing={toggleEditing}
             toggleComplete={toggleComplete}
-            todo={todo} /> )
-            )}
-        </div>
-    )
+            todo={todo}
+          />
+        )
+      )}
+    </div>
+  );
 }
 
 export default TodoWrapper;
