@@ -1,6 +1,7 @@
 import { useReducer } from "react";
 import TodoItem from "./TodoItem";
 import TodoForm from "./TodoForm";
+import CounterWrapper from "./CounterWrapper";
 
 function reducer(todos, action) {
   switch (action.type) {
@@ -116,6 +117,7 @@ function TodoWrapper() {
           />
         )
       )}
+      <CounterWrapper />
     </div>
   );
 }
